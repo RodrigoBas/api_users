@@ -70,6 +70,8 @@ app.put('/users/:id', (req, res) => {
 
 
 // Iniciar o servidor
-app.listen(port, () => {
+ const server = app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
+
+module.exports = {app, server}

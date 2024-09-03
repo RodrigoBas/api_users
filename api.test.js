@@ -1,5 +1,5 @@
 const supertest = require('supertest');
-const app = require('./index.js'); // Importe seu aplicativo Express
+const {app,server} = require('./index.js'); // Importe seu aplicativo Express
 
 describe('Teste GET /users', () => {
   it('deve responder com status 200', async () => {
@@ -8,4 +8,6 @@ describe('Teste GET /users', () => {
   });
 });
 
-
+afterAll(()=>{
+    server.close();
+}); //fecha o servidor após os testes serem concluídos
