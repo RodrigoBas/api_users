@@ -23,9 +23,9 @@ async function createTables() {
   try {
     const connection = await mysql.createConnection({
         host: 'localhost', // Use o nome do host do seu contêiner MySQL
-    user:  process.env.MYSQL_USER, // Seu nome de usuário do MySQL
-    password: process.env.MYSQL_ROOT_PASSWORD,
-    database: process.env.MYSQL_DATABASE
+        user:  process.env.MYSQL_USER, // Seu nome de usuário do MySQL
+        password: process.env.MYSQL_ROOT_PASSWORD,
+        database: process.env.MYSQL_DATABASE
     });
  
   
