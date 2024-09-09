@@ -8,6 +8,15 @@ describe('Teste GET /users', () => {
   });
 });
 
+
+beforeAll( () => {
+  server.on('error', async (e) => {
+      if (e.code === 'EADDRINUSE') {
+        await server.close()
+      }
+    });
+  });
+
 afterAll(()=>{
     server.close();
     connection.close();
