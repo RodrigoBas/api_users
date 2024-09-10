@@ -1,49 +1,47 @@
 name: Node.js CI
 
 on:
-
   push:
-    branches: [ main ]
-
-pull_request:
-  branches: [ main ]
+    branches: 
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-services:
-  mysql:
-    image: mysql:8.4
-    env:
-    MYSQL_ROOT_PASSWORD: '0896'
-    MYSQL_DATABASE: 'usersdb'
-ports:
-- 3306:3306
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: '123456'
+          MYSQL_DATABASE: 'usersdb'
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=5
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-env:
-MYSQL_HOST: 'localhost'
-MYSQL_USER: 'root'
-MYSQL_ROOT_PASSWORD: '0896'
-MYSQL_DATABASE: 'usersdb'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
+      - name: Install dependencies
+        run: npm install
 
-steps:
-- uses: actions/checkout@v2
-- name: Use Node.js
-  uses: actions/setup-node@v1
-  with:
-    node-version: '18'
+      - name: Wait for MySQL to be ready
+        run: |
+          while ! nc -z localhost 3306; do
+            sleep 1
+          done
 
-- name: Install dependencies
-run: npm install
+      - name: Run database setup script
+        run: node script_db.js
 
-- name: Start MySQL
-run: sudo /etc/init.d/mysql start
-
-- name: Run Db
-run: node script_db.js
-
-- name: Run tests
-run: npm test
+      - name: Run tests
+        run: npm test
